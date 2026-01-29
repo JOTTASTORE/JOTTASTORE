@@ -1,0 +1,2303 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JOTTA - Panel Administrativo</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📊</text></svg>">
+    <style>
+        /* ===== VARIABLES CSS ===== */
+        :root {
+            --primary-color: #1a1a1a;
+            --secondary-color: #2d2d2d;
+            --accent-color: #3a86ff;
+            --accent-hover: #2667cc;
+            --light-color: #ffffff;
+            --gray-light: #f5f5f5;
+            --gray-medium: #e0e0e0;
+            --gray-dark: #8a8a8a;
+            --success-color: #4caf50;
+            --warning-color: #ff9800;
+            --danger-color: #f44336;
+            --info-color: #2196f3;
+            
+            --sidebar-width: 250px;
+            --header-height: 70px;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+            
+            --font-primary: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        /* ===== RESET Y ESTILOS GLOBALES ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: var(--font-primary);
+            background-color: var(--gray-light);
+            color: var(--primary-color);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+        
+        ul {
+            list-style: none;
+        }
+        
+        button {
+            cursor: pointer;
+            font-family: inherit;
+            border: none;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+        }
+        
+        input, select, textarea {
+            padding: 12px 15px;
+            border: 1px solid var(--gray-medium);
+            border-radius: var(--border-radius);
+            font-family: inherit;
+            font-size: 16px;
+            transition: var(--transition);
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 2px rgba(58, 134, 255, 0.2);
+        }
+        
+        /* ===== UTILIDADES ===== */
+        .container {
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .d-none {
+            display: none !important;
+        }
+        
+        .d-flex {
+            display: flex;
+        }
+        
+        .flex-column {
+            flex-direction: column;
+        }
+        
+        .justify-between {
+            justify-content: space-between;
+        }
+        
+        .align-center {
+            align-items: center;
+        }
+        
+        .text-center {
+            text-align: center;
+        }
+        
+        .text-right {
+            text-align: right;
+        }
+        
+        .mt-1 { margin-top: 10px; }
+        .mt-2 { margin-top: 20px; }
+        .mt-3 { margin-top: 30px; }
+        .mb-1 { margin-bottom: 10px; }
+        .mb-2 { margin-bottom: 20px; }
+        .mb-3 { margin-bottom: 30px; }
+        .p-2 { padding: 20px; }
+        .p-3 { padding: 30px; }
+        
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .badge-success {
+            background-color: rgba(76, 175, 80, 0.1);
+            color: var(--success-color);
+        }
+        
+        .badge-warning {
+            background-color: rgba(255, 152, 0, 0.1);
+            color: var(--warning-color);
+        }
+        
+        .badge-danger {
+            background-color: rgba(244, 67, 54, 0.1);
+            color: var(--danger-color);
+        }
+        
+        .badge-info {
+            background-color: rgba(33, 150, 243, 0.1);
+            color: var(--info-color);
+        }
+        
+        /* ===== PANTALLA DE LOGIN ===== */
+        .login-screen {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            padding: 20px;
+        }
+        
+        .login-container {
+            background-color: var(--light-color);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            width: 100%;
+            max-width: 400px;
+            padding: 40px 30px;
+        }
+        
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .login-header h1 {
+            font-size: 28px;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+        
+        .login-header p {
+            color: var(--gray-dark);
+        }
+        
+        .login-form .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .login-form label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        .login-form input {
+            width: 100%;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: var(--accent-color);
+            color: white;
+            font-weight: 600;
+            font-size: 16px;
+            border-radius: var(--border-radius);
+            text-align: center;
+        }
+        
+        .btn:hover {
+            background-color: var(--accent-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(58, 134, 255, 0.2);
+        }
+        
+        .btn-full {
+            width: 100%;
+        }
+        
+        .btn-secondary {
+            background-color: var(--secondary-color);
+        }
+        
+        .btn-secondary:hover {
+            background-color: var(--primary-color);
+        }
+        
+        .btn-small {
+            padding: 8px 16px;
+            font-size: 14px;
+        }
+        
+        .btn-danger {
+            background-color: var(--danger-color);
+        }
+        
+        .btn-danger:hover {
+            background-color: #d32f2f;
+        }
+        
+        .btn-success {
+            background-color: var(--success-color);
+        }
+        
+        .btn-success:hover {
+            background-color: #388e3c;
+        }
+        
+        .btn-warning {
+            background-color: var(--warning-color);
+        }
+        
+        .btn-warning:hover {
+            background-color: #f57c00;
+        }
+        
+        /* ===== DASHBOARD PRINCIPAL ===== */
+        .dashboard {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* SIDEBAR */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--primary-color);
+            color: var(--light-color);
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            transition: var(--transition);
+            z-index: 1000;
+            transform: translateX(-100%);
+        }
+        
+        .sidebar.active {
+            transform: translateX(0);
+        }
+        
+        .sidebar-header {
+            padding: 25px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .sidebar-header h2 {
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .sidebar-close {
+            background: none;
+            border: none;
+            color: var(--light-color);
+            font-size: 24px;
+            cursor: pointer;
+            display: none;
+        }
+        
+        .sidebar-nav ul {
+            padding: 20px 0;
+        }
+        
+        .sidebar-nav li {
+            margin-bottom: 5px;
+        }
+        
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 15px 20px;
+            color: rgba(255, 255, 255, 0.8);
+            transition: var(--transition);
+        }
+        
+        .sidebar-nav a:hover, .sidebar-nav a.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--light-color);
+            border-left: 4px solid var(--accent-color);
+        }
+        
+        .sidebar-nav i {
+            font-style: normal;
+            font-size: 20px;
+            width: 24px;
+            text-align: center;
+        }
+        
+        /* CONTENIDO PRINCIPAL */
+        .main-content {
+            flex: 1;
+            transition: var(--transition);
+            width: 100%;
+        }
+        
+        /* HEADER */
+        .header {
+            height: var(--header-height);
+            background-color: var(--light-color);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 99;
+        }
+        
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .menu-toggle {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: var(--primary-color);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            transition: var(--transition);
+        }
+        
+        .menu-toggle:hover {
+            background-color: var(--gray-light);
+        }
+        
+        .header-left h1 {
+            font-size: 20px;
+            color: var(--primary-color);
+        }
+        
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--accent-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .logout-btn {
+            background-color: transparent;
+            color: var(--danger-color);
+            font-weight: 600;
+            padding: 8px 16px;
+            font-size: 14px;
+        }
+        
+        .logout-btn:hover {
+            background-color: rgba(244, 67, 54, 0.1);
+        }
+        
+        /* CONTENIDO DE PÁGINA */
+        .page-content {
+            padding: 20px;
+        }
+        
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .page-header h2 {
+            font-size: 24px;
+            color: var(--primary-color);
+        }
+        
+        /* CARDS DE MÉTRICAS */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .metric-card {
+            background-color: var(--light-color);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 20px;
+            transition: var(--transition);
+        }
+        
+        .metric-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .metric-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .metric-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+        
+        .metric-icon.sales { background-color: rgba(58, 134, 255, 0.1); color: var(--accent-color); }
+        .metric-icon.orders { background-color: rgba(76, 175, 80, 0.1); color: var(--success-color); }
+        .metric-icon.products { background-color: rgba(255, 152, 0, 0.1); color: var(--warning-color); }
+        .metric-icon.stock { background-color: rgba(244, 67, 54, 0.1); color: var(--danger-color); }
+        
+        .metric-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+        
+        .metric-label {
+            color: var(--gray-dark);
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        /* TABLAS */
+        .table-container {
+            background-color: var(--light-color);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+        
+        .table-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--gray-medium);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .table-header h3 {
+            font-size: 18px;
+            color: var(--primary-color);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 600px;
+        }
+        
+        th {
+            text-align: left;
+            padding: 15px;
+            background-color: rgba(0, 0, 0, 0.02);
+            border-bottom: 1px solid var(--gray-medium);
+            font-weight: 600;
+            color: var(--primary-color);
+            font-size: 14px;
+        }
+        
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--gray-light);
+            color: var(--primary-color);
+            font-size: 14px;
+        }
+        
+        tr:hover {
+            background-color: rgba(0, 0, 0, 0.02);
+        }
+        
+        .actions-cell {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        
+        /* SCROLL HORIZONTAL PARA TABLAS EN MÓVIL */
+        .table-wrapper {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        /* MODAL */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+            padding: 20px;
+        }
+        
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .modal {
+            background-color: var(--light-color);
+            border-radius: var(--border-radius);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            transform: translateY(20px);
+            transition: var(--transition);
+        }
+        
+        .modal-overlay.active .modal {
+            transform: translateY(0);
+        }
+        
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--gray-medium);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-header h3 {
+            font-size: 20px;
+            color: var(--primary-color);
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: var(--gray-dark);
+            cursor: pointer;
+            line-height: 1;
+        }
+        
+        .modal-body {
+            padding: 20px;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .form-group {
+            flex: 1;
+            margin-bottom: 15px;
+            min-width: 200px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--primary-color);
+            font-size: 14px;
+        }
+        
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            font-size: 15px;
+        }
+        
+        .modal-footer {
+            padding: 20px;
+            border-top: 1px solid var(--gray-medium);
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        /* MODAL DE CONFIRMACIÓN */
+        .confirm-modal {
+            max-width: 400px;
+        }
+        
+        .confirm-icon {
+            font-size: 48px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .confirm-icon.warning {
+            color: var(--warning-color);
+        }
+        
+        .confirm-icon.danger {
+            color: var(--danger-color);
+        }
+        
+        .confirm-message {
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+        
+        .confirm-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+        
+        /* MOBILE-FIRST RESPONSIVE */
+        
+        /* Pantallas medianas (tablets) */
+        @media (min-width: 768px) {
+            .sidebar {
+                transform: translateX(0);
+            }
+            
+            .sidebar-close {
+                display: none !important;
+            }
+            
+            .menu-toggle {
+                display: none;
+            }
+            
+            .main-content {
+                margin-left: var(--sidebar-width);
+                width: calc(100% - var(--sidebar-width));
+            }
+            
+            .header-left h1 {
+                font-size: 22px;
+            }
+            
+            .page-content {
+                padding: 30px;
+            }
+            
+            .page-header h2 {
+                font-size: 28px;
+            }
+            
+            .table-header h3 {
+                font-size: 20px;
+            }
+            
+            th, td {
+                padding: 15px 20px;
+            }
+            
+            .confirm-buttons {
+                justify-content: flex-end;
+            }
+        }
+        
+        /* Pantallas grandes (desktop) */
+        @media (min-width: 1024px) {
+            .sidebar {
+                width: 280px;
+            }
+            
+            .main-content {
+                margin-left: 280px;
+                width: calc(100% - 280px);
+            }
+            
+            .metrics-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+        
+        /* Pantallas pequeñas (mobile) */
+        @media (max-width: 767px) {
+            .sidebar-close {
+                display: block;
+            }
+            
+            .sidebar-header {
+                padding: 20px 15px;
+            }
+            
+            .sidebar-nav a {
+                padding: 12px 15px;
+                font-size: 15px;
+            }
+            
+            .header {
+                padding: 0 15px;
+                height: 60px;
+            }
+            
+            .user-info span {
+                display: none;
+            }
+            
+            .logout-btn {
+                padding: 6px 12px;
+                font-size: 13px;
+            }
+            
+            .page-content {
+                padding: 15px;
+            }
+            
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .page-header h2 {
+                font-size: 22px;
+            }
+            
+            .metrics-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .metric-card {
+                padding: 15px;
+            }
+            
+            .metric-value {
+                font-size: 24px;
+            }
+            
+            .table-header {
+                padding: 15px;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .btn-small {
+                padding: 6px 12px;
+                font-size: 13px;
+            }
+            
+            .actions-cell {
+                flex-direction: column;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+            
+            .form-group {
+                min-width: 100%;
+            }
+            
+            .modal-footer {
+                flex-direction: column;
+            }
+            
+            .modal-footer .btn {
+                width: 100%;
+            }
+            
+            .confirm-buttons {
+                flex-direction: column;
+            }
+        }
+        
+        /* Pantallas muy pequeñas */
+        @media (max-width: 480px) {
+            .login-container {
+                padding: 30px 20px;
+            }
+            
+            .login-header h1 {
+                font-size: 24px;
+            }
+            
+            .header-left h1 {
+                font-size: 18px;
+            }
+            
+            .metric-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 20px;
+            }
+            
+            .badge {
+                font-size: 10px;
+                padding: 3px 8px;
+            }
+        }
+        
+        /* ANIMACIONES */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease forwards;
+        }
+        
+        /* OVERLAY PARA SIDEBAR EN MÓVIL */
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+        
+        .sidebar-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        /* TOAST NOTIFICATIONS */
+        #toastContainer {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 3000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .toast {
+            background-color: var(--success-color);
+            color: white;
+            padding: 12px 20px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            animation: slideIn 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            min-width: 300px;
+            max-width: 400px;
+        }
+        
+        .toast.error {
+            background-color: var(--danger-color);
+        }
+        
+        .toast.warning {
+            background-color: var(--warning-color);
+        }
+        
+        .toast.info {
+            background-color: var(--info-color);
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <!-- ===== PANTALLA DE LOGIN ===== -->
+    <div id="loginScreen" class="login-screen">
+        <div class="login-container">
+            <div class="login-header">
+                <h1>JOTTA Admin</h1>
+                <p>Panel administrativo de e-commerce</p>
+            </div>
+            
+            <form id="loginForm" class="login-form">
+                <div class="form-group">
+                    <label for="username">Usuario</label>
+                    <input type="text" id="username" placeholder="Ingresa tu usuario" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Contraseña</label>
+                    <input type="password" id="password" placeholder="Ingresa tu contraseña" required>
+                </div>
+                
+                <button type="submit" class="btn btn-full">Iniciar Sesión</button>
+                
+                <div class="mt-2 text-center">
+                    <small>Usuario: JOTTA | Contraseña: Rg210404</small>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- ===== DASHBOARD PRINCIPAL ===== -->
+    <div id="dashboard" class="dashboard d-none">
+        <!-- OVERLAY PARA SIDEBAR EN MÓVIL -->
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+        
+        <!-- SIDEBAR -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h2><span>📊</span> JOTTA</h2>
+                <button class="sidebar-close" id="sidebarClose">×</button>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <ul>
+                    <li><a href="#" class="active" data-page="dashboard"><i>📈</i> Dashboard</a></li>
+                    <li><a href="#" data-page="products"><i>📦</i> Productos</a></li>
+                    <li><a href="#" data-page="orders"><i>🛒</i> Pedidos</a></li>
+                    <li><a href="#" data-page="customers"><i>👥</i> Clientes</a></li>
+                </ul>
+            </nav>
+        </aside>
+        
+        <!-- CONTENIDO PRINCIPAL -->
+        <main class="main-content">
+            <!-- HEADER -->
+            <header class="header">
+                <div class="header-left">
+                    <button class="menu-toggle" id="menuToggle">☰</button>
+                    <h1 id="pageTitle">Dashboard</h1>
+                </div>
+                
+                <div class="header-right">
+                    <div class="user-info">
+                        <div class="user-avatar">JT</div>
+                        <span class="user-name">JOTTA Admin</span>
+                    </div>
+                    <button id="logoutBtn" class="logout-btn">Cerrar Sesión</button>
+                </div>
+            </header>
+            
+            <!-- CONTENIDO DE PÁGINAS -->
+            <div class="page-content">
+                <!-- DASHBOARD -->
+                <div id="dashboardPage" class="page">
+                    <div class="page-header">
+                        <h2>Resumen General</h2>
+                        <div class="date-selector">
+                            <select id="dateRange">
+                                <option value="month">Este mes</option>
+                                <option value="week">Esta semana</option>
+                                <option value="today">Hoy</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <!-- MÉTRICAS -->
+                    <div class="metrics-grid">
+                        <div class="metric-card fade-in">
+                            <div class="metric-header">
+                                <div>
+                                    <div class="metric-value" id="salesAmount">$ 245.850</div>
+                                    <div class="metric-label">Ventas del mes</div>
+                                </div>
+                                <div class="metric-icon sales">💰</div>
+                            </div>
+                        </div>
+                        
+                        <div class="metric-card fade-in">
+                            <div class="metric-header">
+                                <div>
+                                    <div class="metric-value" id="dailyOrders">18</div>
+                                    <div class="metric-label">Pedidos del día</div>
+                                </div>
+                                <div class="metric-icon orders">📦</div>
+                            </div>
+                        </div>
+                        
+                        <div class="metric-card fade-in">
+                            <div class="metric-header">
+                                <div>
+                                    <div class="metric-value" id="activeProducts">42</div>
+                                    <div class="metric-label">Productos activos</div>
+                                </div>
+                                <div class="metric-icon products">🏷️</div>
+                            </div>
+                        </div>
+                        
+                        <div class="metric-card fade-in">
+                            <div class="metric-header">
+                                <div>
+                                    <div class="metric-value" id="lowStock">7</div>
+                                    <div class="metric-label">Stock bajo</div>
+                                </div>
+                                <div class="metric-icon stock">⚠️</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- PEDIDOS RECIENTES -->
+                    <div class="table-container fade-in">
+                        <div class="table-header">
+                            <h3>Pedidos Recientes</h3>
+                            <button class="btn btn-small" id="viewAllOrders">Ver todos</button>
+                        </div>
+                        <div class="table-wrapper">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Cliente</th>
+                                        <th>Fecha</th>
+                                        <th>Total</th>
+                                        <th>Estado</th>
+                                        <th>Pago</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="recentOrdersTable">
+                                    <!-- Los pedidos se cargarán con JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- PRODUCTOS -->
+                <div id="productsPage" class="page d-none">
+                    <div class="page-header">
+                        <h2>Gestión de Productos</h2>
+                        <div class="d-flex align-center" style="gap: 10px;">
+                            <input type="text" id="productSearch" placeholder="Buscar producto..." style="width: 200px;">
+                            <button class="btn" id="addProductBtn">+ Agregar Producto</button>
+                        </div>
+                    </div>
+                    
+                    <div class="table-container fade-in">
+                        <div class="table-wrapper">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Nombre</th>
+                                        <th>Precio (ARS)</th>
+                                        <th>Stock</th>
+                                        <th>Estado</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="productsTable">
+                                    <!-- Los productos se cargarán con JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- PEDIDOS -->
+                <div id="ordersPage" class="page d-none">
+                    <div class="page-header">
+                        <h2>Gestión de Pedidos</h2>
+                        <div class="d-flex align-center" style="gap: 10px;">
+                            <select id="orderStatusFilter">
+                                <option value="">Todos los estados</option>
+                                <option value="pendiente">Pendiente</option>
+                                <option value="pagado">Pagado</option>
+                                <option value="enviado">Enviado</option>
+                                <option value="cancelado">Cancelado</option>
+                            </select>
+                            <button class="btn" id="addOrderBtn">+ Nuevo Pedido</button>
+                        </div>
+                    </div>
+                    
+                    <div class="table-container fade-in">
+                        <div class="table-wrapper">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Cliente</th>
+                                        <th>Fecha</th>
+                                        <th>Total (ARS)</th>
+                                        <th>Estado</th>
+                                        <th>Pago</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="ordersTable">
+                                    <!-- Los pedidos se cargarán con JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- CLIENTES -->
+                <div id="customersPage" class="page d-none">
+                    <div class="page-header">
+                        <h2>Clientes</h2>
+                        <div class="d-flex align-center" style="gap: 10px;">
+                            <input type="text" id="customerSearch" placeholder="Buscar cliente..." style="width: 200px;">
+                            <button class="btn" id="addCustomerBtn">+ Nuevo Cliente</button>
+                        </div>
+                    </div>
+                    
+                    <div class="table-container fade-in">
+                        <div class="table-wrapper">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Nombre</th>
+                                        <th>Email</th>
+                                        <th>Teléfono</th>
+                                        <th>Provincia</th>
+                                        <th>Pedidos</th>
+                                        <th>Última compra</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="customersTable">
+                                    <!-- Los clientes se cargarán con JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <!-- ===== MODAL PARA AGREGAR/EDITAR PRODUCTO ===== -->
+    <div id="productModal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="productModalTitle">Agregar Producto</h3>
+                <button class="modal-close" id="closeProductModal">×</button>
+            </div>
+            
+            <div class="modal-body">
+                <form id="productForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="productName">Nombre del producto *</label>
+                            <input type="text" id="productName" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="productPrice">Precio (ARS $) *</label>
+                            <input type="number" id="productPrice" min="0" step="0.01" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="productStock">Stock *</label>
+                            <input type="number" id="productStock" min="0" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="productStatus">Estado *</label>
+                            <select id="productStatus" required>
+                                <option value="activo">Activo</option>
+                                <option value="inactivo">Inactivo</option>
+                                <option value="agotado">Agotado</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="productDescription">Descripción</label>
+                        <textarea id="productDescription" rows="3"></textarea>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancelProductModal">Cancelar</button>
+                <button class="btn" id="saveProductBtn">Guardar Producto</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ===== MODAL PARA AGREGAR/EDITAR CLIENTE ===== -->
+    <div id="customerModal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="customerModalTitle">Agregar Cliente</h3>
+                <button class="modal-close" id="closeCustomerModal">×</button>
+            </div>
+            
+            <div class="modal-body">
+                <form id="customerForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="customerName">Nombre completo *</label>
+                            <input type="text" id="customerName" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="customerEmail">Email *</label>
+                            <input type="email" id="customerEmail" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="customerPhone">Teléfono *</label>
+                            <input type="tel" id="customerPhone" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="customerProvince">Provincia *</label>
+                            <select id="customerProvince" required>
+                                <option value="">Seleccionar...</option>
+                                <option value="Buenos Aires">Buenos Aires</option>
+                                <option value="Córdoba">Córdoba</option>
+                                <option value="Santa Fe">Santa Fe</option>
+                                <option value="Mendoza">Mendoza</option>
+                                <option value="Tucumán">Tucumán</option>
+                                <option value="Entre Ríos">Entre Ríos</option>
+                                <option value="Salta">Salta</option>
+                                <option value="Chaco">Chaco</option>
+                                <option value="Corrientes">Corrientes</option>
+                                <option value="Misiones">Misiones</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="customerAddress">Dirección</label>
+                            <input type="text" id="customerAddress">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="customerCity">Ciudad</label>
+                            <input type="text" id="customerCity">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="customerNotes">Notas</label>
+                        <textarea id="customerNotes" rows="3"></textarea>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancelCustomerModal">Cancelar</button>
+                <button class="btn" id="saveCustomerBtn">Guardar Cliente</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ===== MODAL PARA AGREGAR/EDITAR PEDIDO ===== -->
+    <div id="orderModal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="orderModalTitle">Agregar Pedido</h3>
+                <button class="modal-close" id="closeOrderModal">×</button>
+            </div>
+            
+            <div class="modal-body">
+                <form id="orderForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="orderCustomer">Cliente *</label>
+                            <select id="orderCustomer" required>
+                                <option value="">Seleccionar cliente...</option>
+                                <!-- Clientes se cargarán dinámicamente -->
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="orderDate">Fecha *</label>
+                            <input type="date" id="orderDate" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="orderStatus">Estado *</label>
+                            <select id="orderStatus" required>
+                                <option value="pendiente">Pendiente</option>
+                                <option value="pagado">Pagado</option>
+                                <option value="enviado">Enviado</option>
+                                <option value="cancelado">Cancelado</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="orderPayment">Método de pago *</label>
+                            <select id="orderPayment" required>
+                                <option value="MercadoPago">MercadoPago</option>
+                                <option value="Transferencia">Transferencia</option>
+                                <option value="Efectivo">Efectivo</option>
+                                <option value="Tarjeta">Tarjeta de crédito</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="orderTotal">Total (ARS $) *</label>
+                            <input type="number" id="orderTotal" min="0" step="0.01" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="orderProducts">Productos (IDs separados por comas)</label>
+                        <input type="text" id="orderProducts" placeholder="Ej: 1, 3, 5">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="orderNotes">Notas del pedido</label>
+                        <textarea id="orderNotes" rows="3"></textarea>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancelOrderModal">Cancelar</button>
+                <button class="btn" id="saveOrderBtn">Guardar Pedido</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ===== MODAL DE CONFIRMACIÓN ===== -->
+    <div id="confirmModal" class="modal-overlay">
+        <div class="modal confirm-modal">
+            <div class="modal-body">
+                <div class="confirm-icon" id="confirmIcon">⚠️</div>
+                <div class="confirm-message" id="confirmMessage">
+                    ¿Estás seguro de que deseas realizar esta acción?
+                </div>
+                <div class="confirm-buttons">
+                    <button class="btn btn-secondary" id="cancelConfirm">Cancelar</button>
+                    <button class="btn btn-danger" id="confirmAction">Confirmar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ===== DATOS INICIALES (SIMULADOS) =====
+        
+        // Datos de productos
+        let products = [
+            { id: 1, name: "Remera Oversize JOTTA", price: 8999, stock: 45, status: "activo", description: "Remera oversize 100% algodón" },
+            { id: 2, name: "Buzo con Capucha", price: 15999, stock: 23, status: "activo", description: "Buzo con capucha y bolsillo canguro" },
+            { id: 3, name: "Pantalón Cargo", price: 12999, stock: 12, status: "activo", description: "Pantalón cargo con múltiples bolsillos" },
+            { id: 4, name: "Gorra Negra", price: 4999, stock: 0, status: "agotado", description: "Gorra ajustable con logo bordado" },
+            { id: 5, name: "Taza Térmica", price: 3499, stock: 67, status: "activo", description: "Taza térmica de acero inoxidable" },
+            { id: 6, name: "Riñonera Urbana", price: 7499, stock: 5, status: "activo", description: "Riñonera impermeable con múltiples compartimentos" },
+            { id: 7, name: "Medias Pack x3", price: 2999, stock: 89, status: "activo", description: "Pack de 3 pares de medias" },
+            { id: 8, name: "Campera Rompevientos", price: 22999, stock: 3, status: "activo", description: "Campera impermeable y rompevientos" }
+        ];
+        
+        // Datos de clientes (ampliados con más campos)
+        let customers = [
+            { id: 1, name: "María González", email: "maria.gonzalez@email.com", phone: "11-1234-5678", province: "Buenos Aires", address: "Av. Corrientes 1234", city: "CABA", orders: 5, lastPurchase: "15/11/2023", notes: "Cliente frecuente" },
+            { id: 2, name: "Juan Pérez", email: "juan.perez@email.com", phone: "351-987-6543", province: "Córdoba", address: "Av. Colón 567", city: "Córdoba Capital", orders: 3, lastPurchase: "16/11/2023", notes: "" },
+            { id: 3, name: "Laura Martínez", email: "laura.martinez@email.com", phone: "342-555-1234", province: "Santa Fe", address: "San Martín 890", city: "Santa Fe", orders: 2, lastPurchase: "17/11/2023", notes: "Prefiere MercadoPago" },
+            { id: 4, name: "Carlos Rodríguez", email: "carlos.rodriguez@email.com", phone: "261-777-8888", province: "Mendoza", address: "Patricias Mendocinas 456", city: "Mendoza", orders: 1, lastPurchase: "18/11/2023", notes: "" },
+            { id: 5, name: "Ana López", email: "ana.lopez@email.com", phone: "11-8765-4321", province: "Buenos Aires", address: "Cabildo 2345", city: "CABA", orders: 7, lastPurchase: "19/11/2023", notes: "VIP" },
+            { id: 6, name: "Pedro Sánchez", email: "pedro.sanchez@email.com", phone: "381-444-5555", province: "Tucumán", address: "25 de Mayo 789", city: "San Miguel de Tucumán", orders: 4, lastPurchase: "20/11/2023", notes: "" },
+            { id: 7, name: "Sofía Fernández", email: "sofia.fernandez@email.com", phone: "343-666-7777", province: "Entre Ríos", address: "9 de Julio 321", city: "Paraná", orders: 2, lastPurchase: "20/11/2023", notes: "" },
+            { id: 8, name: "Diego García", email: "diego.garcia@email.com", phone: "387-222-3333", province: "Salta", address: "Belgrano 654", city: "Salta Capital", orders: 6, lastPurchase: "20/11/2023", notes: "Solicita factura A" }
+        ];
+        
+        // Datos de pedidos
+        let orders = [
+            { id: 1001, customerId: 1, customer: "María González", date: "15/11/2023", total: 8999, status: "enviado", payment: "MercadoPago", products: [1], notes: "Entregado sin novedad" },
+            { id: 1002, customerId: 2, customer: "Juan Pérez", date: "16/11/2023", total: 30997, status: "pagado", payment: "Transferencia", products: [1, 2], notes: "" },
+            { id: 1003, customerId: 3, customer: "Laura Martínez", date: "17/11/2023", total: 12999, status: "pendiente", payment: "MercadoPago", products: [3], notes: "A confirmar stock" },
+            { id: 1004, customerId: 4, customer: "Carlos Rodríguez", date: "18/11/2023", total: 3499, status: "cancelado", payment: "Efectivo", products: [5], notes: "Cliente canceló" },
+            { id: 1005, customerId: 5, customer: "Ana López", date: "19/11/2023", total: 22999, status: "enviado", payment: "MercadoPago", products: [8], notes: "Enviar con cuidado" },
+            { id: 1006, customerId: 6, customer: "Pedro Sánchez", date: "20/11/2023", total: 2999, status: "pagado", payment: "Transferencia", products: [7], notes: "" },
+            { id: 1007, customerId: 7, customer: "Sofía Fernández", date: "20/11/2023", total: 15999, status: "pendiente", payment: "MercadoPago", products: [2], notes: "Esperando pago" },
+            { id: 1008, customerId: 8, customer: "Diego García", date: "20/11/2023", total: 7499, status: "pagado", payment: "Efectivo", products: [6], notes: "" }
+        ];
+        
+        // ===== VARIABLES GLOBALES =====
+        let currentProductId = null;
+        let currentCustomerId = null;
+        let currentOrderId = null;
+        let currentPage = "dashboard";
+        let pendingAction = null;
+        let pendingItemId = null;
+        let pendingItemType = null;
+        
+        // ===== FUNCIONES DE INICIALIZACIÓN =====
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            // Configurar eventos del login
+            document.getElementById('loginForm').addEventListener('submit', handleLogin);
+            
+            // Configurar eventos del sidebar
+            document.querySelectorAll('.sidebar-nav a').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const page = this.getAttribute('data-page');
+                    navigateToPage(page);
+                    closeSidebar();
+                });
+            });
+            
+            // Configurar botón de logout
+            document.getElementById('logoutBtn').addEventListener('click', handleLogout);
+            
+            // Configurar botón de menú móvil
+            document.getElementById('menuToggle').addEventListener('click', openSidebar);
+            document.getElementById('sidebarClose').addEventListener('click', closeSidebar);
+            document.getElementById('sidebarOverlay').addEventListener('click', closeSidebar);
+            
+            // Configurar modales
+            setupModal('product');
+            setupModal('customer');
+            setupModal('order');
+            
+            // Configurar modal de confirmación
+            const confirmModal = document.getElementById('confirmModal');
+            document.getElementById('cancelConfirm').addEventListener('click', () => closeConfirmModal());
+            document.getElementById('confirmAction').addEventListener('click', () => executePendingAction());
+            
+            confirmModal.addEventListener('click', function(e) {
+                if (e.target === this) closeConfirmModal();
+            });
+            
+            // Configurar botones de acción
+            document.getElementById('addProductBtn').addEventListener('click', () => openProductModal());
+            document.getElementById('addCustomerBtn').addEventListener('click', () => openCustomerModal());
+            document.getElementById('addOrderBtn').addEventListener('click', () => openOrderModal());
+            document.getElementById('viewAllOrders').addEventListener('click', () => navigateToPage('orders'));
+            
+            // Configurar filtros y búsquedas
+            document.getElementById('orderStatusFilter').addEventListener('change', function() {
+                loadOrdersTable(this.value);
+            });
+            
+            document.getElementById('productSearch').addEventListener('input', function() {
+                filterProducts(this.value);
+            });
+            
+            document.getElementById('customerSearch').addEventListener('input', function() {
+                filterCustomers(this.value);
+            });
+            
+            // Inicializar datos
+            updateMetrics();
+            loadRecentOrdersTable();
+            
+            // Detectar tamaño de pantalla
+            handleResize();
+            window.addEventListener('resize', handleResize);
+            
+            // Establecer fecha actual en formulario de pedidos
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('orderDate').value = today;
+        });
+        
+        // ===== FUNCIONES DE NAVEGACIÓN =====
+        
+        function setupModal(type) {
+            const modal = document.getElementById(`${type}Modal`);
+            const closeBtn = document.getElementById(`close${type.charAt(0).toUpperCase() + type.slice(1)}Modal`);
+            const cancelBtn = document.getElementById(`cancel${type.charAt(0).toUpperCase() + type.slice(1)}Modal`);
+            const saveBtn = document.getElementById(`save${type.charAt(0).toUpperCase() + type.slice(1)}Btn`);
+            
+            if (closeBtn) closeBtn.addEventListener('click', () => closeModal(type));
+            if (cancelBtn) cancelBtn.addEventListener('click', () => closeModal(type));
+            if (saveBtn) saveBtn.addEventListener('click', () => saveItem(type));
+            
+            modal.addEventListener('click', function(e) {
+                if (e.target === this) closeModal(type);
+            });
+        }
+        
+        function handleLogin(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            if (username === 'JOTTA' && password === 'Rg210404') {
+                document.getElementById('loginScreen').classList.add('d-none');
+                document.getElementById('dashboard').classList.remove('d-none');
+                document.title = "JOTTA Admin - Dashboard";
+                document.querySelector('.user-avatar').textContent = 'JT';
+                document.querySelector('.user-name').textContent = 'JOTTA Admin';
+            } else {
+                alert('Usuario o contraseña incorrectos. Usa: JOTTA / Rg210404');
+            }
+        }
+        
+        function handleLogout() {
+            document.getElementById('dashboard').classList.add('d-none');
+            document.getElementById('loginScreen').classList.remove('d-none');
+            document.getElementById('loginForm').reset();
+            document.title = "JOTTA Admin";
+            closeSidebar();
+        }
+        
+        function navigateToPage(page) {
+            // Ocultar todas las páginas
+            document.querySelectorAll('.page').forEach(p => p.classList.add('d-none'));
+            
+            // Mostrar la página solicitada
+            document.getElementById(`${page}Page`).classList.remove('d-none');
+            
+            // Actualizar enlace activo en sidebar
+            document.querySelectorAll('.sidebar-nav a').forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('data-page') === page) {
+                    link.classList.add('active');
+                }
+            });
+            
+            // Actualizar título de página
+            const pageTitles = {
+                dashboard: "Dashboard",
+                products: "Productos",
+                orders: "Pedidos",
+                customers: "Clientes"
+            };
+            
+            document.getElementById('pageTitle').textContent = pageTitles[page];
+            document.title = `JOTTA Admin - ${pageTitles[page]}`;
+            
+            // Actualizar currentPage
+            currentPage = page;
+            
+            // Cargar datos de la página
+            switch(page) {
+                case 'dashboard':
+                    updateMetrics();
+                    loadRecentOrdersTable();
+                    break;
+                case 'products':
+                    loadProductsTable();
+                    break;
+                case 'orders':
+                    loadOrdersTable();
+                    break;
+                case 'customers':
+                    loadCustomersTable();
+                    break;
+            }
+        }
+        
+        // ===== FUNCIONES MOBILE =====
+        
+        function openSidebar() {
+            document.getElementById('sidebar').classList.add('active');
+            document.getElementById('sidebarOverlay').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeSidebar() {
+            document.getElementById('sidebar').classList.remove('active');
+            document.getElementById('sidebarOverlay').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        
+        function handleResize() {
+            const isMobile = window.innerWidth < 768;
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            
+            if (!isMobile) {
+                sidebar.classList.remove('active');
+                overlay.classList.remove('active');
+                document.body.style.overflow = '';
+            } else if (!sidebar.classList.contains('active')) {
+                sidebar.classList.remove('active');
+                overlay.classList.remove('active');
+            }
+        }
+        
+        // ===== FUNCIONES DEL DASHBOARD =====
+        
+        function updateMetrics() {
+            const totalSales = orders.reduce((sum, order) => {
+                return order.status !== 'cancelado' ? sum + order.total : sum;
+            }, 0);
+            
+            const dailyOrders = orders.filter(order => order.date === '20/11/2023').length;
+            const activeProducts = products.filter(product => product.status === 'activo').length;
+            const lowStock = products.filter(product => product.stock > 0 && product.stock < 10).length;
+            
+            document.getElementById('salesAmount').textContent = `$ ${totalSales.toLocaleString('es-AR')}`;
+            document.getElementById('dailyOrders').textContent = dailyOrders;
+            document.getElementById('activeProducts').textContent = activeProducts;
+            document.getElementById('lowStock').textContent = lowStock;
+        }
+        
+        function loadRecentOrdersTable() {
+            const tbody = document.getElementById('recentOrdersTable');
+            tbody.innerHTML = '';
+            
+            const sortedOrders = [...orders].sort((a, b) => {
+                const dateA = a.date.split('/').reverse().join('');
+                const dateB = b.date.split('/').reverse().join('');
+                return dateB.localeCompare(dateA);
+            }).slice(0, 5);
+            
+            sortedOrders.forEach(order => {
+                const row = document.createElement('tr');
+                let statusClass = '';
+                switch(order.status) {
+                    case 'pendiente': statusClass = 'badge-warning'; break;
+                    case 'pagado': statusClass = 'badge-info'; break;
+                    case 'enviado': statusClass = 'badge-success'; break;
+                    case 'cancelado': statusClass = 'badge-danger'; break;
+                }
+                
+                row.innerHTML = `
+                    <td>#${order.id}</td>
+                    <td>${order.customer}</td>
+                    <td>${order.date}</td>
+                    <td><strong>$ ${order.total.toLocaleString('es-AR')}</strong></td>
+                    <td><span class="badge ${statusClass}">${order.status}</span></td>
+                    <td>${order.payment}</td>
+                    <td class="actions-cell">
+                        <button class="btn btn-small" onclick="editOrder(${order.id})">Editar</button>
+                        <button class="btn btn-small btn-danger" onclick="showDeleteConfirmation('order', ${order.id})">Eliminar</button>
+                    </td>
+                `;
+                
+                tbody.appendChild(row);
+            });
+        }
+        
+        // ===== FUNCIONES DE PRODUCTOS =====
+        
+        function loadProductsTable() {
+            const tbody = document.getElementById('productsTable');
+            tbody.innerHTML = '';
+            
+            products.forEach(product => {
+                const row = document.createElement('tr');
+                const statusClass = product.status === 'activo' ? 'badge-success' : 
+                                  product.status === 'inactivo' ? 'badge-warning' : 'badge-danger';
+                const statusText = product.status === 'activo' ? 'Activo' : 
+                                  product.status === 'inactivo' ? 'Inactivo' : 'Agotado';
+                
+                let stockClass = '';
+                if (product.stock === 0) {
+                    stockClass = 'text-right badge-danger';
+                } else if (product.stock < 10) {
+                    stockClass = 'text-right badge-warning';
+                } else {
+                    stockClass = 'text-right';
+                }
+                
+                row.innerHTML = `
+                    <td>${product.id}</td>
+                    <td><strong>${product.name}</strong></td>
+                    <td>$ ${product.price.toLocaleString('es-AR')}</td>
+                    <td class="${stockClass}">${product.stock} unidades</td>
+                    <td><span class="badge ${statusClass}">${statusText}</span></td>
+                    <td class="actions-cell">
+                        <button class="btn btn-small" onclick="editProduct(${product.id})">Editar</button>
+                        <button class="btn btn-small btn-danger" onclick="showDeleteConfirmation('product', ${product.id})">Eliminar</button>
+                    </td>
+                `;
+                
+                tbody.appendChild(row);
+            });
+        }
+        
+        function filterProducts(searchTerm) {
+            const tbody = document.getElementById('productsTable');
+            const rows = tbody.querySelectorAll('tr');
+            
+            rows.forEach(row => {
+                const productName = row.querySelector('td:nth-child(2) strong').textContent.toLowerCase();
+                if (productName.includes(searchTerm.toLowerCase())) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+        
+        function openProductModal(productId = null) {
+            const modal = document.getElementById('productModal');
+            const form = document.getElementById('productForm');
+            
+            if (productId) {
+                document.getElementById('productModalTitle').textContent = 'Editar Producto';
+                currentProductId = productId;
+                
+                const product = products.find(p => p.id === productId);
+                if (product) {
+                    document.getElementById('productName').value = product.name;
+                    document.getElementById('productPrice').value = product.price;
+                    document.getElementById('productStock').value = product.stock;
+                    document.getElementById('productStatus').value = product.status;
+                    document.getElementById('productDescription').value = product.description || '';
+                }
+            } else {
+                document.getElementById('productModalTitle').textContent = 'Agregar Producto';
+                currentProductId = null;
+                form.reset();
+            }
+            
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function saveProduct() {
+            const name = document.getElementById('productName').value.trim();
+            const price = parseFloat(document.getElementById('productPrice').value);
+            const stock = parseInt(document.getElementById('productStock').value);
+            const status = document.getElementById('productStatus').value;
+            const description = document.getElementById('productDescription').value.trim();
+            
+            if (!name || isNaN(price) || isNaN(stock)) {
+                showToast('Por favor, complete todos los campos requeridos.', 'error');
+                return;
+            }
+            
+            if (currentProductId) {
+                const index = products.findIndex(p => p.id === currentProductId);
+                if (index !== -1) {
+                    products[index] = { ...products[index], name, price, stock, status, description };
+                    showToast('Producto actualizado correctamente', 'success');
+                }
+            } else {
+                const newId = products.length > 0 ? Math.max(...products.map(p => p.id)) + 1 : 1;
+                products.push({ id: newId, name, price, stock, status, description });
+                showToast('Producto agregado correctamente', 'success');
+            }
+            
+            closeModal('product');
+            loadProductsTable();
+            updateMetrics();
+        }
+        
+        function editProduct(productId) {
+            openProductModal(productId);
+        }
+        
+        // ===== FUNCIONES DE CLIENTES =====
+        
+        function loadCustomersTable() {
+            const tbody = document.getElementById('customersTable');
+            tbody.innerHTML = '';
+            
+            customers.forEach(customer => {
+                const row = document.createElement('tr');
+                
+                row.innerHTML = `
+                    <td>${customer.id}</td>
+                    <td><strong>${customer.name}</strong></td>
+                    <td>${customer.email}</td>
+                    <td>${customer.phone}</td>
+                    <td>${customer.province}</td>
+                    <td>${customer.orders}</td>
+                    <td>${customer.lastPurchase}</td>
+                    <td class="actions-cell">
+                        <button class="btn btn-small" onclick="editCustomer(${customer.id})">Editar</button>
+                        <button class="btn btn-small btn-danger" onclick="showDeleteConfirmation('customer', ${customer.id})">Eliminar</button>
+                    </td>
+                `;
+                
+                tbody.appendChild(row);
+            });
+        }
+        
+        function filterCustomers(searchTerm) {
+            const tbody = document.getElementById('customersTable');
+            const rows = tbody.querySelectorAll('tr');
+            
+            rows.forEach(row => {
+                const customerName = row.querySelector('td:nth-child(2) strong').textContent.toLowerCase();
+                const customerEmail = row.querySelector('td:nth-child(3)').textContent.toLowerCase();
+                
+                if (customerName.includes(searchTerm.toLowerCase()) || customerEmail.includes(searchTerm.toLowerCase())) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+        
+        function openCustomerModal(customerId = null) {
+            const modal = document.getElementById('customerModal');
+            const form = document.getElementById('customerForm');
+            
+            if (customerId) {
+                document.getElementById('customerModalTitle').textContent = 'Editar Cliente';
+                currentCustomerId = customerId;
+                
+                const customer = customers.find(c => c.id === customerId);
+                if (customer) {
+                    document.getElementById('customerName').value = customer.name;
+                    document.getElementById('customerEmail').value = customer.email;
+                    document.getElementById('customerPhone').value = customer.phone;
+                    document.getElementById('customerProvince').value = customer.province;
+                    document.getElementById('customerAddress').value = customer.address || '';
+                    document.getElementById('customerCity').value = customer.city || '';
+                    document.getElementById('customerNotes').value = customer.notes || '';
+                }
+            } else {
+                document.getElementById('customerModalTitle').textContent = 'Agregar Cliente';
+                currentCustomerId = null;
+                form.reset();
+            }
+            
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function saveCustomer() {
+            const name = document.getElementById('customerName').value.trim();
+            const email = document.getElementById('customerEmail').value.trim();
+            const phone = document.getElementById('customerPhone').value.trim();
+            const province = document.getElementById('customerProvince').value;
+            const address = document.getElementById('customerAddress').value.trim();
+            const city = document.getElementById('customerCity').value.trim();
+            const notes = document.getElementById('customerNotes').value.trim();
+            
+            if (!name || !email || !phone || !province) {
+                showToast('Por favor, complete todos los campos requeridos.', 'error');
+                return;
+            }
+            
+            if (currentCustomerId) {
+                const index = customers.findIndex(c => c.id === currentCustomerId);
+                if (index !== -1) {
+                    customers[index] = { ...customers[index], name, email, phone, province, address, city, notes };
+                    showToast('Cliente actualizado correctamente', 'success');
+                }
+            } else {
+                const newId = customers.length > 0 ? Math.max(...customers.map(c => c.id)) + 1 : 1;
+                customers.push({ 
+                    id: newId, 
+                    name, 
+                    email, 
+                    phone, 
+                    province, 
+                    address, 
+                    city, 
+                    orders: 0, 
+                    lastPurchase: '', 
+                    notes 
+                });
+                showToast('Cliente agregado correctamente', 'success');
+            }
+            
+            closeModal('customer');
+            loadCustomersTable();
+        }
+        
+        function editCustomer(customerId) {
+            openCustomerModal(customerId);
+        }
+        
+        // ===== FUNCIONES DE PEDIDOS =====
+        
+        function loadOrdersTable(filterStatus = '') {
+            const tbody = document.getElementById('ordersTable');
+            tbody.innerHTML = '';
+            
+            const filteredOrders = filterStatus 
+                ? orders.filter(order => order.status === filterStatus)
+                : orders;
+            
+            filteredOrders.forEach(order => {
+                const row = document.createElement('tr');
+                let statusClass = '';
+                switch(order.status) {
+                    case 'pendiente': statusClass = 'badge-warning'; break;
+                    case 'pagado': statusClass = 'badge-info'; break;
+                    case 'enviado': statusClass = 'badge-success'; break;
+                    case 'cancelado': statusClass = 'badge-danger'; break;
+                }
+                
+                row.innerHTML = `
+                    <td>#${order.id}</td>
+                    <td>${order.customer}</td>
+                    <td>${order.date}</td>
+                    <td><strong>$ ${order.total.toLocaleString('es-AR')}</strong></td>
+                    <td><span class="badge ${statusClass}">${order.status}</span></td>
+                    <td>${order.payment}</td>
+                    <td class="actions-cell">
+                        <button class="btn btn-small" onclick="editOrder(${order.id})">Editar</button>
+                        <button class="btn btn-small btn-danger" onclick="showDeleteConfirmation('order', ${order.id})">Eliminar</button>
+                    </td>
+                `;
+                
+                tbody.appendChild(row);
+            });
+        }
+        
+        function openOrderModal(orderId = null) {
+            const modal = document.getElementById('orderModal');
+            const customerSelect = document.getElementById('orderCustomer');
+            
+            // Cargar clientes en el select
+            customerSelect.innerHTML = '<option value="">Seleccionar cliente...</option>';
+            customers.forEach(customer => {
+                const option = document.createElement('option');
+                option.value = customer.id;
+                option.textContent = `${customer.name} (${customer.email})`;
+                customerSelect.appendChild(option);
+            });
+            
+            if (orderId) {
+                document.getElementById('orderModalTitle').textContent = 'Editar Pedido';
+                currentOrderId = orderId;
+                
+                const order = orders.find(o => o.id === orderId);
+                if (order) {
+                    // Convertir fecha de DD/MM/YYYY a YYYY-MM-DD
+                    const [day, month, year] = order.date.split('/');
+                    const formattedDate = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+                    
+                    document.getElementById('orderCustomer').value = order.customerId;
+                    document.getElementById('orderDate').value = formattedDate;
+                    document.getElementById('orderStatus').value = order.status;
+                    document.getElementById('orderPayment').value = order.payment;
+                    document.getElementById('orderTotal').value = order.total;
+                    document.getElementById('orderProducts').value = order.products ? order.products.join(', ') : '';
+                    document.getElementById('orderNotes').value = order.notes || '';
+                }
+            } else {
+                document.getElementById('orderModalTitle').textContent = 'Agregar Pedido';
+                currentOrderId = null;
+                document.getElementById('orderForm').reset();
+                
+                // Establecer fecha actual
+                const today = new Date().toISOString().split('T')[0];
+                document.getElementById('orderDate').value = today;
+            }
+            
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function saveOrder() {
+            const customerId = parseInt(document.getElementById('orderCustomer').value);
+            const date = document.getElementById('orderDate').value;
+            const status = document.getElementById('orderStatus').value;
+            const payment = document.getElementById('orderPayment').value;
+            const total = parseFloat(document.getElementById('orderTotal').value);
+            const productsInput = document.getElementById('orderProducts').value.trim();
+            const notes = document.getElementById('orderNotes').value.trim();
+            
+            if (!customerId || !date || !status || !payment || isNaN(total)) {
+                showToast('Por favor, complete todos los campos requeridos.', 'error');
+                return;
+            }
+            
+            // Convertir fecha de YYYY-MM-DD a DD/MM/YYYY
+            const [year, month, day] = date.split('-');
+            const formattedDate = `${day}/${month}/${year}`;
+            
+            // Obtener nombre del cliente
+            const customer = customers.find(c => c.id === customerId);
+            if (!customer) {
+                showToast('Cliente no encontrado', 'error');
+                return;
+            }
+            
+            // Procesar productos
+            const orderProducts = productsInput ? productsInput.split(',').map(id => parseInt(id.trim())).filter(id => !isNaN(id)) : [];
+            
+            if (currentOrderId) {
+                const index = orders.findIndex(o => o.id === currentOrderId);
+                if (index !== -1) {
+                    orders[index] = {
+                        ...orders[index],
+                        customerId,
+                        customer: customer.name,
+                        date: formattedDate,
+                        status,
+                        payment,
+                        total,
+                        products: orderProducts,
+                        notes
+                    };
+                    showToast('Pedido actualizado correctamente', 'success');
+                }
+            } else {
+                const newId = orders.length > 0 ? Math.max(...orders.map(o => o.id)) + 1 : 1001;
+                orders.push({
+                    id: newId,
+                    customerId,
+                    customer: customer.name,
+                    date: formattedDate,
+                    status,
+                    payment,
+                    total,
+                    products: orderProducts,
+                    notes
+                });
+                
+                // Actualizar estadísticas del cliente
+                const customerIndex = customers.findIndex(c => c.id === customerId);
+                if (customerIndex !== -1) {
+                    customers[customerIndex].orders += 1;
+                    customers[customerIndex].lastPurchase = formattedDate;
+                }
+                
+                showToast('Pedido agregado correctamente', 'success');
+            }
+            
+            closeModal('order');
+            loadOrdersTable();
+            updateMetrics();
+            if (currentPage === 'customers') loadCustomersTable();
+            if (currentPage === 'dashboard') loadRecentOrdersTable();
+        }
+        
+        function editOrder(orderId) {
+            openOrderModal(orderId);
+        }
+        
+        // ===== FUNCIONES DE ELIMINACIÓN =====
+        
+        function showDeleteConfirmation(type, id) {
+            let item;
+            let message = '';
+            
+            switch(type) {
+                case 'product':
+                    item = products.find(p => p.id === id);
+                    if (item) {
+                        message = `
+                            <strong>¿Estás seguro de que deseas eliminar este producto?</strong><br><br>
+                            <strong>Producto:</strong> ${item.name}<br>
+                            <strong>Precio:</strong> $ ${item.price.toLocaleString('es-AR')}<br>
+                            <strong>Stock:</strong> ${item.stock} unidades
+                        `;
+                    }
+                    break;
+                    
+                case 'customer':
+                    item = customers.find(c => c.id === id);
+                    if (item) {
+                        // Verificar si el cliente tiene pedidos
+                        const customerOrders = orders.filter(o => o.customerId === id);
+                        if (customerOrders.length > 0) {
+                            message = `
+                                <strong>¡Atención! Este cliente tiene ${customerOrders.length} pedido(s).</strong><br><br>
+                                ¿Estás seguro de que deseas eliminar al cliente ${item.name}?<br>
+                                Esta acción también eliminará todos sus pedidos asociados.
+                            `;
+                        } else {
+                            message = `
+                                <strong>¿Estás seguro de que deseas eliminar este cliente?</strong><br><br>
+                                <strong>Cliente:</strong> ${item.name}<br>
+                                <strong>Email:</strong> ${item.email}<br>
+                                <strong>Teléfono:</strong> ${item.phone}
+                            `;
+                        }
+                    }
+                    break;
+                    
+                case 'order':
+                    item = orders.find(o => o.id === id);
+                    if (item) {
+                        message = `
+                            <strong>¿Estás seguro de que deseas eliminar este pedido?</strong><br><br>
+                            <strong>Pedido #:</strong> ${item.id}<br>
+                            <strong>Cliente:</strong> ${item.customer}<br>
+                            <strong>Total:</strong> $ ${item.total.toLocaleString('es-AR')}<br>
+                            <strong>Estado:</strong> ${item.status}
+                        `;
+                    }
+                    break;
+            }
+            
+            if (!item) return;
+            
+            pendingAction = 'delete';
+            pendingItemType = type;
+            pendingItemId = id;
+            
+            document.getElementById('confirmIcon').textContent = '🗑️';
+            document.getElementById('confirmIcon').className = 'confirm-icon danger';
+            document.getElementById('confirmMessage').innerHTML = message;
+            document.getElementById('confirmAction').textContent = `Eliminar ${type === 'product' ? 'Producto' : type === 'customer' ? 'Cliente' : 'Pedido'}`;
+            document.getElementById('confirmAction').className = 'btn btn-danger';
+            
+            openConfirmModal();
+        }
+        
+        function deleteItem(type, id) {
+            let success = false;
+            let message = '';
+            
+            switch(type) {
+                case 'product':
+                    const productIndex = products.findIndex(p => p.id === id);
+                    if (productIndex !== -1) {
+                        products.splice(productIndex, 1);
+                        success = true;
+                        message = 'Producto eliminado correctamente';
+                    }
+                    break;
+                    
+                case 'customer':
+                    const customerIndex = customers.findIndex(c => c.id === id);
+                    if (customerIndex !== -1) {
+                        // Eliminar también los pedidos del cliente
+                        orders = orders.filter(o => o.customerId !== id);
+                        customers.splice(customerIndex, 1);
+                        success = true;
+                        message = 'Cliente y sus pedidos eliminados correctamente';
+                    }
+                    break;
+                    
+                case 'order':
+                    const orderIndex = orders.findIndex(o => o.id === id);
+                    if (orderIndex !== -1) {
+                        const order = orders[orderIndex];
+                        orders.splice(orderIndex, 1);
+                        
+                        // Actualizar estadísticas del cliente
+                        const customerIndex = customers.findIndex(c => c.id === order.customerId);
+                        if (customerIndex !== -1) {
+                            customers[customerIndex].orders = Math.max(0, customers[customerIndex].orders - 1);
+                        }
+                        
+                        success = true;
+                        message = 'Pedido eliminado correctamente';
+                    }
+                    break;
+            }
+            
+            if (success) {
+                showToast(message, 'success');
+                
+                // Actualizar las tablas según la página actual
+                switch(currentPage) {
+                    case 'dashboard':
+                        updateMetrics();
+                        loadRecentOrdersTable();
+                        break;
+                    case 'products':
+                        loadProductsTable();
+                        break;
+                    case 'orders':
+                        loadOrdersTable(document.getElementById('orderStatusFilter').value);
+                        break;
+                    case 'customers':
+                        loadCustomersTable();
+                        break;
+                }
+            }
+        }
+        
+        // ===== FUNCIONES DE MODALES =====
+        
+        function closeModal(type) {
+            document.getElementById(`${type}Modal`).classList.remove('active');
+            document.getElementById(`${type}Form`).reset();
+            
+            if (type === 'product') currentProductId = null;
+            if (type === 'customer') currentCustomerId = null;
+            if (type === 'order') currentOrderId = null;
+            
+            document.body.style.overflow = '';
+        }
+        
+        function openConfirmModal() {
+            document.getElementById('confirmModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeConfirmModal() {
+            document.getElementById('confirmModal').classList.remove('active');
+            document.body.style.overflow = '';
+            pendingAction = null;
+            pendingItemType = null;
+            pendingItemId = null;
+        }
+        
+        function executePendingAction() {
+            if (pendingAction === 'delete' && pendingItemType && pendingItemId) {
+                deleteItem(pendingItemType, pendingItemId);
+            }
+            closeConfirmModal();
+        }
+        
+        function saveItem(type) {
+            switch(type) {
+                case 'product': saveProduct(); break;
+                case 'customer': saveCustomer(); break;
+                case 'order': saveOrder(); break;
+            }
+        }
+        
+        // ===== FUNCIONES DE NOTIFICACIÓN =====
+        
+        function showToast(message, type = 'info') {
+            const toastContainer = document.getElementById('toastContainer') || createToastContainer();
+            const toast = document.createElement('div');
+            
+            toast.className = `toast ${type}`;
+            toast.innerHTML = `
+                <span>${message}</span>
+                <button onclick="this.parentElement.remove()" style="background:none; border:none; color:white; font-size:20px; cursor:pointer; margin-left:15px;">×</button>
+            `;
+            
+            toastContainer.appendChild(toast);
+            
+            setTimeout(() => {
+                if (toast.parentElement) {
+                    toast.remove();
+                }
+            }, 5000);
+        }
+        
+        function createToastContainer() {
+            const container = document.createElement('div');
+            container.id = 'toastContainer';
+            document.body.appendChild(container);
+            return container;
+        }
+    </script>
+</body>
+</html>
